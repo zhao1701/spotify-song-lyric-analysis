@@ -1,6 +1,1305 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><style></style><title>readme</title></head><body><article class="markdown-body"><h1>Exploring, Analyzing, and Modeling 58 years of Popular Music</h1>
-<h2>Introduction</h2>
-<h4>A Reboot of a Prior Project</h4>
-<p>This analysis originated as a <a href="https://github.com/manksh/EDAV_Dream_Team">group-based final project</a> for a course in my M.S. in Data Science program called <a href="http://www.columbia.edu/cu/bulletin/uwb/subj/STAT/GR5702-20181-001/"><strong>STAT 5702: Exploratory Data Analysis and Visualization</strong></a>. In that project, we examined the lyrics and audio features of America's most popular songs from 1965-2015 to gain insights about how our culture and music industry has evolved. However, because the project was to be conducted primarily in R despite our much greater proficiency with Python, we were relatively hamstrung and had to limit the scope and depth of our explorations. After finishing the class and free to explore the data without constraints, I decided to revisit and extend the project in Python for a more comprehensive analysis.</p>
-<h4>Motivation</h4>
-<p>Popular music offers a unique lens through which to study what preoccupies a society, what people value in their entertainment, and how cultural preferences change with each generation. <a href="https://en.wikipedia.org/wiki/Billboard_(magazine)"><strong>Billboard Magazine</strong></a> publishes a yearly chart, the <a href="https://en.wikipedia.org/wiki/Billboard_Year-End"><strong>Year-End Hot 100</strong></a> that ranks the best-performing singles of the United States based on data collected from physical sales, digital sales, radio airplay, and streaming. Many text mining analyses have been performed on the lyrics of these songs, with <a href="https://www.kaylinpavlik.com/50-years-of-pop-music/">Kaylin Pavlik's</a>, whose dataset my group used in the original project, among the most notable. To build on these ideas, we also incorporated for each song audio-feature data (such as loudness, tempo, danceability, etc.) maintained by Spotify. The combination of data from the Billboard rankings, song lyrics, and Spotify provides many avenues for rich and interesting analysis.</p></article></body></html>
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  max-width: 980px;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 45px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headerlink {
+  font: normal 400 16px fontawesome-mini;
+  vertical-align: middle;
+  margin-left: -16px;
+  float: left;
+  display: inline-block;
+  text-decoration: none;
+  opacity: 0;
+  color: #333;
+}
+
+.markdown-body .headerlink:focus {
+  outline: none;
+}
+
+.markdown-body h1 .headerlink {
+  margin-top: 0.8rem;
+}
+
+.markdown-body h2 .headerlink,
+.markdown-body h3 .headerlink {
+  margin-top: 0.6rem;
+}
+
+.markdown-body h4 .headerlink {
+  margin-top: 0.2rem;
+}
+
+.markdown-body h5 .headerlink,
+.markdown-body h6 .headerlink {
+  margin-top: 0;
+}
+
+.markdown-body .headerlink:hover,
+.markdown-body h1:hover .headerlink,
+.markdown-body h2:hover .headerlink,
+.markdown-body h3:hover .headerlink,
+.markdown-body h4:hover .headerlink,
+.markdown-body h5:hover .headerlink,
+.markdown-body h6:hover .headerlink {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px fontawesome-mini;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\e157';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><style>/*github*/
+.codehilite {background-color:#fff;color:#333333;}
+.codehilite .hll {background-color:#ffffcc;}
+.codehilite .c{color:#999988;font-style:italic}
+.codehilite .err{color:#a61717;background-color:#e3d2d2}
+.codehilite .k{font-weight:bold}
+.codehilite .o{font-weight:bold}
+.codehilite .cm{color:#999988;font-style:italic}
+.codehilite .cp{color:#999999;font-weight:bold}
+.codehilite .c1{color:#999988;font-style:italic}
+.codehilite .cs{color:#999999;font-weight:bold;font-style:italic}
+.codehilite .gd{color:#000000;background-color:#ffdddd}
+.codehilite .ge{font-style:italic}
+.codehilite .gr{color:#aa0000}
+.codehilite .gh{color:#999999}
+.codehilite .gi{color:#000000;background-color:#ddffdd}
+.codehilite .go{color:#888888}
+.codehilite .gp{color:#555555}
+.codehilite .gs{font-weight:bold}
+.codehilite .gu{color:#800080;font-weight:bold}
+.codehilite .gt{color:#aa0000}
+.codehilite .kc{font-weight:bold}
+.codehilite .kd{font-weight:bold}
+.codehilite .kn{font-weight:bold}
+.codehilite .kp{font-weight:bold}
+.codehilite .kr{font-weight:bold}
+.codehilite .kt{color:#445588;font-weight:bold}
+.codehilite .m{color:#009999}
+.codehilite .s{color:#dd1144}
+.codehilite .n{color:#333333}
+.codehilite .na{color:teal}
+.codehilite .nb{color:#0086b3}
+.codehilite .nc{color:#445588;font-weight:bold}
+.codehilite .no{color:teal}
+.codehilite .ni{color:purple}
+.codehilite .ne{color:#990000;font-weight:bold}
+.codehilite .nf{color:#990000;font-weight:bold}
+.codehilite .nn{color:#555555}
+.codehilite .nt{color:navy}
+.codehilite .nv{color:teal}
+.codehilite .ow{font-weight:bold}
+.codehilite .w{color:#bbbbbb}
+.codehilite .mf{color:#009999}
+.codehilite .mh{color:#009999}
+.codehilite .mi{color:#009999}
+.codehilite .mo{color:#009999}
+.codehilite .sb{color:#dd1144}
+.codehilite .sc{color:#dd1144}
+.codehilite .sd{color:#dd1144}
+.codehilite .s2{color:#dd1144}
+.codehilite .se{color:#dd1144}
+.codehilite .sh{color:#dd1144}
+.codehilite .si{color:#dd1144}
+.codehilite .sx{color:#dd1144}
+.codehilite .sr{color:#009926}
+.codehilite .s1{color:#dd1144}
+.codehilite .ss{color:#990073}
+.codehilite .bp{color:#999999}
+.codehilite .vc{color:teal}
+.codehilite .vg{color:teal}
+.codehilite .vi{color:teal}
+.codehilite .il{color:#009999}
+.codehilite .gc{color:#999;background-color:#EAF2F5}
+</style><title>readme</title></head><body><article class="markdown-body"><h1 id="exploring-analyzing-and-modeling-58-years-of-popular-music">Exploring, Analyzing, and Modeling 58 years of Popular Music<a class="headerlink" href="#exploring-analyzing-and-modeling-58-years-of-popular-music" title="Permanent link"></a></h1>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#building-the-dataset">Building the Dataset</a></li>
+<li><a href="#analysis-of-audio-features">Analysis of Audio Features</a><ul>
+<li><a href="#better-technology-and-worse-attention-spans">Better Technology and Worse Attention Spans</a></li>
+<li><a href="#cutting-out-the-instrumental-fat">Cutting Out the Instrumental Fat</a></li>
+<li><a href="#the-rise-of-rap-and-hip-hop">The Rise of Rap and Hip-Hop</a></li>
+<li><a href="#correlation-structure">Correlation Structure</a></li>
+<li><a href="#more-energy">More Energy</a></li>
+<li><a href="#sad-dancing">Sad Dancing</a></li>
+<li><a href="#the-loudness-wars">The Loudness Wars</a></li>
+<li><a href="#the-big-picture">The Big Picture</a></li>
+<li><a href="#embedding-in-latent-audio-space">Embedding in Latent Audio Space</a></li>
+</ul>
+</li>
+<li><a href="#analysis-of-artists">Analysis of Artists</a><ul>
+<li><a href="#artists-at-the-extremes">Artists at the Extremes</a></li>
+<li><a href="#madonna-is-the-queen-of-pop">Madonna is the Queen of Pop</a></li>
+<li><a href="#flash-in-the-pan-vs-steady-burn">Flash in the Pan vs. Steady Burn</a></li>
+<li><a href="#declining-artist-diversity">Declining Artist Diversity</a></li>
+<li><a href="#an-increasingly-connected-world">An Increasingly Connected World</a></li>
+</ul>
+</li>
+<li><a href="#analysis-of-lyrics">Analysis of Lyrics</a><ul>
+<li><a href="#love-conquers-all">Love Conquers All</a></li>
+<li><a href="#love-is-not-forever">Love is Not Forever</a></li>
+<li><a href="#singing-about-her">Singing About Her</a></li>
+<li><a href="#pronouns">Pronouns</a></li>
+<li><a href="#related-words">Related Words</a></li>
+<li><a href="#topic-modeling">Topic Modeling</a></li>
+<li><a href="#sign-of-the-times">Sign of the Times</a></li>
+<li><a href="#extreme-words">Extreme Words</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link"></a></h2>
+<h4 id="a-reboot-of-a-prior-project">A Reboot of a Prior Project<a class="headerlink" href="#a-reboot-of-a-prior-project" title="Permanent link"></a></h4>
+<p>This analysis originated as a <a href="https://github.com/manksh/EDAV_Dream_Team">group-based final project</a> for a course in my M.S. in Data Science program called <a href="http://www.columbia.edu/cu/bulletin/uwb/subj/STAT/GR5702-20181-001/">STAT 5702: Exploratory Data Analysis and Visualization</a>. In that project, we examined the lyrics and audio features of America&rsquo;s most popular songs from <strong>1965</strong>-<strong>2015</strong> to gain insights about how our culture and music industry has evolved. However, because the project was to be conducted primarily in R despite our much greater proficiency with Python, we were relatively hamstrung and had to limit the scope and depth of our explorations. After finishing the class and free to explore the data without constraints, I decided to revisit and extend the project in Python for a more comprehensive analysis.</p>
+<h4 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link"></a></h4>
+<p>Popular music offers a unique lens through which to study what preoccupies a society, what people value in their entertainment, and how cultural preferences change with each generation. <a href="https://en.wikipedia.org/wiki/Billboard_(magazine)">Billboard Magazine</a> publishes a yearly chart, the <a href="https://en.wikipedia.org/wiki/Billboard_Year-End">Year-End Hot 100</a> that ranks the best-performing singles of the United States based on data collected from physical sales, digital sales, radio airplay, and streaming. Many text mining analyses have been performed on the lyrics of these songs, with <a href="https://www.kaylinpavlik.com/50-years-of-pop-music/">Kaylin Pavlik&rsquo;s</a>, whose dataset my group used in the original project, among the most notable. To build on these ideas, we also incorporated for each song audio-feature data (such as loudness, tempo, danceability, etc.) maintained by Spotify. The combination of data from the Billboard rankings, song lyrics, and Spotify audio features provides many avenues for rich and interesting analysis.</p>
+<h2 id="building-the-dataset">Building the Dataset<a class="headerlink" href="#building-the-dataset" title="Permanent link"></a></h2>
+<p>The <a href="https://github.com/walkerkq/musiclyrics/blob/master/billboard_lyrics_1964-2015.csv">dataset</a> we originally used consisted of Billboard Year-End Hot 100 Singles from 1965 to 2015 and each song&rsquo;s corresponding lyrics. However, I wanted to build my own dataset for two reasons:</p>
+<ol>
+<li>As of writing, the Billboard Year-End charts that are available extend from 1960 to 2017, providing 8 more years of data from which to extrapolate trends.</li>
+<li>A significant proportion of lyrics in the original dataset contained fused words, where the last word of a line was combined with the first word of the next line. Such an issue posed many obstacles to a clean analysis of the lyrics, which we were not able to resolve with standard text preprocessing techniques.</li>
+</ol>
+<p>To obtain songs and rankings from Billboard&rsquo;s Year-End Hot 100 charts, I scraped the data from relevant <a href="https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_2017">Wikipedia tables</a> for 1960-2017. Because some songs are released at the end of the year, they might chart in the year of its release and in the following year. There were <strong>235</strong> such duplicates, not counting the original songs, and they were removed from the dataset.</p>
+<p>Spotify&rsquo;s audio feature data was then accessed directly by querying Spotify&rsquo;s API using the Billboard Hot 100 songs obtained from Wikipedia. Approximately 3% of all songs were not queried successfully from Spotify (though this is down from 10% when using the original dataset).</p>
+<p>Collecting lyrics for each song proved more involved. Many music services offer API&rsquo;s to query for song lyrics, but all either charge a fee, limit the number of songs that can be queried, or return only a proportion of the lyrics. Fortunately, <a href="https://genius.com/Woodkid-run-boy-run-lyrics">genius.com</a>, <a href="http://www.songlyrics.com/woodkid/run-boy-run-lyrics/">songlyrics.com</a>, <a href="http://www.lyricsmode.com/lyrics/w/woodkid/run_boy_run.html">lyricsmode.com</a>, and <a href="http://www.metrolyrics.com/run-boy-run-lyrics-woodkid.html">metrolyrics.com</a> serve lyrics on webpages that follow consistent URL naming conventions, meaning I could once again scrape for the data needed. For each song, scrapes are conducted sequentially through the four websites; if the scrape of a website fails, then the next website is attempted unless all four have already been exhausted.</p>
+<p>Much attention was paid to normalizing the names of artists and songs from the initial Wikipedia scrape (e.g. changing <em>Sean Combs</em> and <em>P. Diddy</em> to <em>Puff Daddy</em>) and preparing them into a format suitable for conversion to a URL string (e.g. changing from <em>Hall &amp; Oates</em> to <em>Hall and Oates</em>). While scraping for lyrics failed in 3.6% of songs in the original dataset my group used, doing so with cleaned Wikipedia data resulted in failed scrapes accounting for less than 1% (0.78%) of all songs. The vast majority of lyrics were obtained from genius.com (93.8%), with songlyrics.com accounting for almost all of the remaining lyrics (5.6%).</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/lyric-source-distribution.png" width='800px'></p>
+
+<p>The final de-duplicated dataset consists of <strong>5566</strong> singles, of which <strong>5396</strong> have Spotify audio feature data and <strong>5516</strong> have lyrics.</p>
+<h2 id="analysis-of-audio-features">Analysis of Audio Features<a class="headerlink" href="#analysis-of-audio-features" title="Permanent link"></a></h2>
+<p>The audio features collected from Spotify cover a wide range of areas, with some related to the content of the lyrics, some measuring objective properties of the song, and most interestingly, some measuring subjective properties like how danceable or positive a song is. Below are distributions of each feature and a brief explanation of their meaning.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/univariate-distributions.png" width='800px'></p>
+
+<ul>
+<li><strong>Acousticness</strong> describes whether the song uses primarily acoustic instruments or electronic/electric instruments. A value of 1 indicates that a song is purely acoustic, and from the histogram it appears a large majority of popular music is more electronic than it is acoustic.</li>
+<li><strong>Danceability</strong> describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythmic stability, beat strength, and overall regularity. It appears to have a normal distribution, with a value of 1 indicating high danceability.</li>
+<li><strong>Duration (minutes)</strong> simply indicates the length of the song. Most songs are between 3-5 minutes long, however the Year-End Hot 100 charts contain at least one song of over 20 minutes in length.</li>
+<li><strong>Energy</strong> is different from danceability in that it is a perceptual measure of intensity and activity. Energetic tracks feel dense, fast, loud, and noisy. For example, death metal would have a high energy value while a Bach prelude would have a low one. Songs on the Year-End Hot 100 are unsurprisingly skewed towards having higher energy.</li>
+<li><strong>Explicit</strong> is a categorical feature, with 1 indicating that a song contains explicit lyrics. The vast majority of Hot 100 songs are not explicit.</li>
+<li><strong>Instrumentalness</strong> describes the extent to which the singer is not the primary performer of the song. Clearly, almost all songs on the Hot 100 are dominated by vocal performances.</li>
+<li><strong>Key</strong> represents the key signature the track is in. Integers map to pitches using standard pitch class notation where 0 = C, 1 = C#/Db, 2 = D, etc.</li>
+<li><strong>Liveness</strong> detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the song was performed and recorded live. It appears that most Hot 100 singles are studio-recorded.</li>
+<li>The overall <strong>loudness</strong> of a recording is measured in decibels (dB). Loudness values are averaged across the entire song and typically range between -60dB and 0dB.</li>
+<li><strong>Mode</strong> indicates whether a song is in primarily a major key or a minor key. I had expected most popular songs to be in a minor key, so was surprised see that almost 2/3rds of Hot 100 hits are actually in a major key.</li>
+<li>The <strong>popularity</strong> of a song is a time-discounted relative metric of how often the song has been streamed on Spotify. It can be thought of as a proxy for some combination of the song&rsquo;s Billboard rank and recency.</li>
+<li><strong>Speechiness</strong> detects the presence of spoken words in a recording. The more exclusively speech-like the recording (ex. talk shows, audio books, etc.), the closer the speechiness is to 1.0. Naturally, no Hot 100 singles have a speechiness of 1.0, but a significant number non-zero speechiness, most likely rap songs.</li>
+<li>A song&rsquo;s <strong>tempo</strong> is its speed, or the number of beats per minute. It roughly appears to be normally distributed about 120BPM.</li>
+<li>The <strong>time signature</strong> is a notational convention to specify how many beats are in each bar of music. Almost all Hot 100 songs have 4 beats per bar, but a small number of hits have 3 beats per bar, also known as triple meter. These are probably slower ballads. A few songs have time signature values of less than 3, which are almost certainly errors.</li>
+<li><strong>Valence</strong> describes the musical positiveness conveyed by the song. In other words, songs with high valence sound more happy/positive/cheerful while songs with low valance sound more negative/depressed/angry. The data shows that Hot 100 singles are more likely to have high valance, which is in keeping with the observation that Hot 100 singles are also more likely to be in a major key.</li>
+</ul>
+<h4 id="better-technology-and-worse-attention-spans">Better Technology and Worse Attention Spans<a class="headerlink" href="#better-technology-and-worse-attention-spans" title="Permanent link"></a></h4>
+<p>The boxplots below show the distribution of Hot 100 song durations for each year.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/duration-over-time.png" width='800px'></p>
+
+<p>Between <strong>1960</strong> and <strong>1990</strong>, songs saw a nearly uninterrupted increase in median duration from about <strong>~2.5</strong> minutes to <strong>~4.5</strong> minutes, which I suspect is due to the <a href="https://www.timetoast.com/timelines/music-storage-through-time">invention</a> of the casette tape in the early <strong>1960s</strong> and compact disc in the early <strong>1980s</strong>. Both were new mediums that could store much more music than vinyl records, allowing songs to become much longer. From <strong>1990</strong> onward, Hot 100 songs have gradually shortened to <strong>~3.6</strong> minutes, possibly driven by competition for radio airplay and <a href="https://news.osu.edu/news/2017/04/04/streaming-attention/">diminishing attention spans</a>. Since <strong>2010</strong>, the availability of streaming platforms offers listeners a much wider choice of music than ever before, incentivizing artists to keep songs shorter and tighter lest they be skipped.</p>
+<h4 id="cutting-out-the-instrumental-fat">Cutting Out the Instrumental Fat<a class="headerlink" href="#cutting-out-the-instrumental-fat" title="Permanent link"></a></h4>
+<p>The plots below are also boxplots, but of songs&rsquo; instrumentalness for each year. Because the vast majority of Hot 100 songs contain little to no instrumetal sections, the median instrumentalness of songs is almost always <strong>0</strong> each year. However, the change in distribution and number of outliers over time shows that the overall instrumentalness of Hot 100 music has been steadily declining.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/instrumentalness-over-time.png" width='800px'></p>
+
+<p>There are two possible factors driving the overall trend:</p>
+<ol>
+<li>Pure instrumental has become increasingly less popular (ex. classical and New Age music)</li>
+<li>The shortening of songs due to declining attention spans means that the instrumental sections of songs, such as intros, interludes, solos, and outros, are <a href="https://news.osu.edu/news/2017/04/04/streaming-attention/">among the first to get cut</a>.</li>
+</ol>
+<h4 id="the-rise-of-rap-and-hip-hop">The Rise of Rap and Hip-Hop<a class="headerlink" href="#the-rise-of-rap-and-hip-hop" title="Permanent link"></a></h4>
+<p>For each song, the number of words per second (WPS) was calculated by dividing the number of words in the lyrics by the duration of the song in seconds. The time series box plots of WPS show that from the early <strong>1990s</strong> to the <strong>2010s</strong>, songs have become considerably denser in their textual content as the delivery of words became steadily faster. During this period, the median speechiness of songs rose dramatically, as did the number of explicit Hot 100 songs each year.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/lyric-features-over-time.png" width='800px'></p>
+
+<p>In 1991, a <a href="https://www.theatlantic.com/entertainment/archive/2015/05/1991-the-most-important-year-in-music/392642/">change in Billboard&rsquo;s tracking methodology</a> suddenly gave rap and hip-hop a new prominence on its charts. The sudden success of both genres begot more success, and as the genres grew, they likely drove the increase in median words per second, median speechiness, and number of explicit songs.</p>
+<h4 id="correlation-structure">Correlation Structure<a class="headerlink" href="#correlation-structure" title="Permanent link"></a></h4>
+<p>The correlation heatmap below shows how the Spotify audio features relate to one another. While most pairs of features have correlation coefficients (R) near <strong>0</strong>, indicating no meaningful linear relationship, a small handful of feature pairs are weakly to moderately related:</p>
+<ul>
+<li>Energy vs. loudness: moderately correlated with <strong>R=0.7</strong></li>
+<li>Speechiness vs. explicit: weakly correlated with <strong>R=0.48</strong></li>
+<li>Danceability vs. valence: weakly correlated wtih <strong>R=0.45</strong></li>
+<li>Acousticness vs. energy: weakly anti-correlatated with <strong>R=-0.57</strong></li>
+</ul>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/correlation-heatmap.png" width='800px'></p>
+
+<p>The following three scatter plots and violin plot show the relationships between the aforementioned features in more detail. Intuitively, it makes sense that loudness and energy are positively correlated; a song&rsquo;s loudness is calculated as an average of loudness values throughout the entire song, and denser, faster music naturally results in a higher average loudness.</p>
+<p>The relationship between acousticness and energy would be better approximated with a non-linear model, yet the basic relationship still holds; the greater the proportion of acoustic instruments in a song, the lower the energy of the song.</p>
+<p>I initially found the positive correlation between danceability and valence rather surprising since dance music this decade does not seem particularly &ldquo;positive-sounding&rdquo;. It so happens that this relationship is more prominent in older songs (discussed later).</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/bivariate-distributions.png" width='800px'></p>
+
+<p>We previously saw that the rise in the median speechiness of songs and the number of expicit songs is closely linked, and the above violin plot shows that the median speechiness of explicit Hot 100 songs is <strong>~0.1</strong> higher than that of non-explicit Hot 100 songs.</p>
+<h4 id="more-energy">More Energy<a class="headerlink" href="#more-energy" title="Permanent link"></a></h4>
+<p>The negative relationship between acousticness and energy becomes more interesting when we account for how it has evolved over the years. The smaller scatterplots show the acousticness and energy of each Hot 100 song faceted by decade, while the larger scatterplot shows the acousticness and energy of all Hot 100 songs with release year expressed as a color.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/energy-vs-acousticness-over-time.png" width='800px'></p>
+
+<p>There is a clear trend of decreasing acousticness and increasing energy over time. The distribution of acousticness and energy is much more even during the <strong>1960s</strong> and even forms a slight cluster around <strong>0.8</strong> acousticness and <strong>0.33</strong> energy. However, even by the <strong>1970s</strong>, the densest region in the distribution is near <strong>0.0</strong> acousticness and <strong>0.75</strong> energy. With each passing decade, the number of Hot 100 songs with acousticness exceeding <strong>0.2</strong> becomes less frequent, and the distribution in the energy of these songs tightens around <strong>0.75</strong>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/acousticness-over-time.png" width='800px'></p>
+
+<p>The high acousticness of Hot 100 songs in the early <strong>1960s</strong> was actually a backlash to the electric guitar, invented in the <strong>1930s</strong>, and the subsequent rock and roll movement of the <strong>1940s</strong> and <strong>1950s</strong>. From <a href="http://www.liverpoolmuseums.org.uk/wml/exhibitions/thebeatgoeson/thebeatgoesonline/technology/instruments/electricguitar.aspx">Liverpool Museums</a>:</p>
+<blockquote>
+<p>Many musicians and listeners were unenthusiastic about the new instrument’s sound and the way it was used. This attitude, which was often hostile, was fundamental in a turn back to more folk-like sounds and the eventual development of the so-called folk revival of the late 1950s and 1960s. Basic to this movement and to many of its successive phases was a dislike of a sound that was produced by electricity, rather than by more ‘natural’ means.</p>
+</blockquote>
+<p>The popularity of synthesizers in the late <strong>1970s</strong> and <strong>1980s</strong> likely further contributed to the decline of acoustic music in the Hot 100, followed by the increasing prominence of EDM during the <strong>2000s</strong>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/energy-over-time.png" width='800px'></p>
+
+<h4 id="sad-dancing">Sad Dancing<a class="headerlink" href="#sad-dancing" title="Permanent link"></a></h4>
+<p>Another fascinating trend in the data is that the danceability of Hot 100 songs has been on the rise while the valence (positivity) has been declining.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/danceability-vs-valence-over-time.png" width='800px'></p>
+
+<p>From the <strong>1960s</strong> to the <strong>1980s</strong>, the densest regions of the distribution of valence and danceability were at valences close to <strong>1.0</strong>, but from the <strong>1990s</strong> onwards, that cluster vanished. Furthermore, whereas there existed a weak positive correlation between danceability and valence in the earlier decades, the correlation gradually grew weaker starting from the <strong>1990s</strong>. Essentially, as time progressed, more songs became more danceable, yet highly danceable music became less &ldquo;positive&rdquo;.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/danceability-over-time.png" width='800px'></p>
+
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/valence-over-time.png" width='800px'></p>
+
+<h4 id="the-loudness-wars">The Loudness Wars<a class="headerlink" href="#the-loudness-wars" title="Permanent link"></a></h4>
+<p>One of the most unmistakable trends is that, in addition to becoming more energetic, Hot 100 music has also become louder and louder.
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/energy-vs-loudness-over-time.png" width='800px'></p>
+This phenomenon is called <a href="https://www.npr.org/2009/12/31/122114058/the-loudness-wars-why-music-sounds-worse">The Loudness Wars</a>. Listeners have a habit of preferring louder music over softer music, and as the music marketplace becomes increasingly crowded, the average volume of songs is pushed higher to stand out more, resulting in an inevitable &ldquo;loudness arms race&rdquo;.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/loudness-over-time.png" width='800px'></p>
+
+<h4 id="the-big-picture">The Big Picture<a class="headerlink" href="#the-big-picture" title="Permanent link"></a></h4>
+<p>The <a href="https://en.wikipedia.org/wiki/Parallel_coordinates">parallel coordinate plot</a> below visualizes the relationships between all the key features. Each path extending from valence to acousticness represents a single song and is comprised of line segments that connect the values of each feature of the song. These values were rescaled to between <strong>0.0</strong> and <strong>1.0</strong> for ease of visualization.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/parallel-coordinates.png" width='800px'></p>
+
+<p>Here too, we can see that valence and danceability are positively correlated; higher valence values generally connect to higher danceability values relative to other songs of similar age. However, more recent Hot 100 songs tend to be much lower in valence and higher in danceability than older ones. Generally speaking, the newest songs tend to be higher energy, more danceable, less positive, louder, and barely acoustic.</p>
+<h4 id="embedding-in-latent-audio-space">Embedding in Latent Audio Space<a class="headerlink" href="#embedding-in-latent-audio-space" title="Permanent link"></a></h4>
+<p>An embedding is a projection of high-dimensional data points, in this case 15 dimensions of audio feature data, into a lower-dimensional space. <a href="https://distill.pub/2016/misread-tsne/">T-distributed Stochastic Neighbor Embedding</a>, or tSNE, is a particularly effective method for non-linearly compressing data into a 2 or 3-dimensional space suitable for visualization; similar points are pulled together while dissimilar points are pushed away. In addition to songs, I averaged the audio features for each artist, decade, and a few other properties and included them in the embedding as well.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/embedding-audio-features.png" width='800px'></p>
+
+<p>Usually the axes of a tSNE embedding hold no significant meaning, but because of the data&rsquo;s correlation structure, the y-axis appears to be some non-linear composite of the time-dependent features discussed previously. Particularly interesting is the fact that the top-ranked singles of each year seem to have more of a &ldquo;sonic recency&rdquo; than other songs. It could be that the number one songs are trend-setters and that songs in subsequent years emulate certain properties of previous number one hits.</p>
+<p>It is important to emphasize that these embeddings are based only on audio features; songs of different genres that stylistically sound nothing alike might still be projected next to each other because they contain similar features like acousticness, loudness, tempo, etc. For this reason, embedding only audio feature data may be of limited usefulness (Is embedding <strong>My Sharona</strong> next to <strong>Hey Jude</strong> really justified? Why is <strong>Every Breath You Take</strong> and <strong>Bette Davis Eyes</strong> so far along the recency axis?)</p>
+<h2 id="analysis-of-artists">Analysis of Artists<a class="headerlink" href="#analysis-of-artists" title="Permanent link"></a></h2>
+<h4 id="artists-at-the-extremes">Artists at the Extremes<a class="headerlink" href="#artists-at-the-extremes" title="Permanent link"></a></h4>
+<p>Using the Spotify audio feature data, I constructed audio feature profiles for each artist by averaging the features for each of their songs. The word clouds below show which artists have the highest values for each audio feature. Only artists with at least <strong>5</strong> Hot 100 songs are included since too small a sample may not be representative of the artist&rsquo;s overall work.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/most-extreme-artists.png" width='800px'></p>
+
+<h4 id="madonna-is-the-queen-of-pop">Madonna is the Queen of Pop<a class="headerlink" href="#madonna-is-the-queen-of-pop" title="Permanent link"></a></h4>
+<p>Perhaps the most natural first question to ask is simply, &ldquo;Which artists have the most hit singles?&rdquo; Amazingly, Madonna has charted <strong>35</strong> times and remains the only artist to have produced over <strong>30</strong> hot 100 singles throughout the course of her career.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/most-charted-artists.png" width='800px'></p>
+
+<h4 id="flash-in-the-pan-vs-steady-burn">Flash in the Pan vs. Steady Burn<a class="headerlink" href="#flash-in-the-pan-vs-steady-burn" title="Permanent link"></a></h4>
+<p>While legendary artists from Madonna to Phil Collins have forged successful careers with numerous hit songs, the vast majority of artists are not as fortunate. The histogram on the left shows that over <strong>1,300</strong> artists only ever generated <strong>1</strong> hit song. In fact, <strong>58%</strong> of charting artists are one-hit wonders who were only able do so once in their careers, while <strong>82%</strong> of charting artists have charted at most 3 times.
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/distribution-hits-per-artist.png" width='800px'></p></p>
+<p>That half of all charting artists are flashes in the pan suggests that the Year-End Hot 100 is surprisingly diverse in terms of the number of unique artists that chart each year. It speaks to how competitive the music industry is that generating a hit single that lands on the Year-End Hot 100, and all the exposure such success entails, is far from a guarantee of maintaining a sustained career. Of those artists with steady-burn careers, I plotted their hit songs as points on separate timelines, one timeline for each artist. The timelines are displayed in order of length of the artist&rsquo;s career, starting with Michael Jackson, who has had the longest charting career; even years after his death, a song he wrote managed chart in the Hot 100 in <strong>2014</strong>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/artist-career-spans.png" width='800px'></p>
+
+<p align='center'> <b>Note</b>: "Length of Career Span" is an imperfect metric since older artists may have had hits prior to 1960.</p>
+
+<p>I was quite surprised to see how some artists such as Santana and Aaron Neville did not produce as many hit singles as the most popular artists, yet still managed to chart on the Year-End Top 100 during vastly different decades of their careers.</p>
+<h4 id="declining-artist-diversity">Declining Artist Diversity<a class="headerlink" href="#declining-artist-diversity" title="Permanent link"></a></h4>
+<p>The number of unique artists on the Year-End Hot 100 is in general decline. The trend is quite noisy, so I have smoothed it with a ten-year moving average. As recently as <strong>2016</strong>, close to half of all songs on the Year-End Hot 100 were from artists who charted at least twice that year, a far cry from <strong>1972</strong> when almost all of the top 100 songs were from distinct artists.
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/artist-diversity-over-time.png" width='800px'></p>
+Particularly interesting is the sharp decline in artist diversity from <strong>2000</strong> to <strong>2010</strong>, a <a href="http://money.cnn.com/2010/02/02/news/companies/napster_music_industry/">traumatic decade of shrinking revenue for the entire industry</a>. It is possible that during this period, risk-averse record companies were only willing to produce, market, and distribute songs from established musicians and the occasional newly discovered superstar. In essence, as the pie shrunk, the superstars got larger pieces of it until the rise of digital streaming revenue in the early <strong>2010s</strong> partially stemmed the bleeding.</p>
+<h4 id="an-increasingly-connected-world">An Increasingly Connected World<a class="headerlink" href="#an-increasingly-connected-world" title="Permanent link"></a></h4>
+<p>In addition to a decline in artist diversity in the Year-End Hot 100 charts, there has been a marked increase in the number of collaborations from 1990 to the early <strong>2000s</strong>. Collaborations occur when an artist invites a guest artist to perform on her song and are usually denoted in the artist name as <strong>[primary artist] featuring [guest artist(s)]</strong>. Two possible reasons for the rise in artist collaborations come to mind:</p>
+<ol>
+<li>Rap and hip-hop are inherently collaborative genres, and its rise to prominence in the <strong>1990s</strong> drove the increase in collaborations.</li>
+<li>The contraction of the music industry <strong>post-2000s</strong> encouraged artists to appear together on songs to generate the necessary star-wattage to attract listeners&rsquo; attention and to broaden their exposure with different audiences.</li>
+</ol>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/collaborations-over-time.png" width='800px'></p>
+
+<p>The two smaller plots below show which artists most frequently featured guest artists in their songs and which artists were most frequently featured as a guest, respectively. The larger bar plot simply counts collaborations per artist, regardless of whether the artist features another or is featured by another. From all three plots, it appears that the musicians who collaborate the most appear to be rappers and hip-hop artists.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/featuring-vs-featured-artists.png" width='800px'></p>
+
+<p>To visualize the structure of artist collaborations, I plotted the collaborations as a network in which the nodes (red circles) represent artists and edges (lines) represent a collaboration between two artists. Most of the edges are thin and purple, representing a single collaboration between two artists on the Year-End Hot 100, but the handful of peach-colored edges near the center represent two collaborations per artist pair, and the two thick blue edges represent four collaborations per artist pair.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/artist-collaboration-network-1.png" width='800px'></p>
+
+<p>The vast majority of collaborations between two artists on the Year-End Hot 100 occur only once. The most notable exception is a well-connected artist in the center that has collaborated four times each with two different artists and twice with numerous others, <strong>Drake</strong>.</p>
+<p>Focusing on the largest component of the network, I removed the numerous small and isolated sub-networks, and re-plotted the data so that artists with the most collaborations are placed closer to the center of the plot. With the addition of labeled points, we can see which artists tend to collaborate the most with others and who they have collaborated with.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/artist-collaboration-network-2.png" width='1000px'></p>
+
+<h2 id="analysis-of-lyrics">Analysis of Lyrics<a class="headerlink" href="#analysis-of-lyrics" title="Permanent link"></a></h2>
+<h4 id="love-conquers-all">Love Conquers All<a class="headerlink" href="#love-conquers-all" title="Permanent link"></a></h4>
+<p>After removing common but uninformative words (also called <a href="https://en.wikipedia.org/wiki/Stop_words">stop words</a>) from the whole corpus of lyrics, <strong>love</strong> becomes the most frequently used word, followed by <strong>know</strong> and then <strong>like</strong>.
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/most-popular-words.png" width='1000px'></p></p>
+<p>Bigrams are just combinations of two words. For example, the words/unigrams <strong>ice</strong> and <strong>cream</strong> together form a very common bigram, <strong>ice cream</strong>. In the case of Hot 100 song lyrics, the most common bigrams are, unsurprisingly, repetitions of words or sounds, often as a means of embellishing melodies.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/most-popular-bigrams.png" width='1000px'></p>
+
+<h4 id="love-is-not-forever">Love is Not Forever<a class="headerlink" href="#love-is-not-forever" title="Permanent link"></a></h4>
+<p>The time series plot below shows the number of times <em>love</em> and <em>like</em> appear in Hot 100 songs for each year. Common wisdom holds that most Hot 100 songs are one way or another about love, and songs from the <strong>late 1970s</strong> and <strong>1980s</strong> certainly use the word quite a bit.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/love-like-over-time.png" width='1000px'></p>
+
+<p>Since the <strong>1960s</strong>, the frequency with which <em>like</em> has been used in Hot 100 songs has steadily risen, overtaking <em>love</em> in the <strong>early 2000s</strong> and no doubt buoyed by its popular usage as a verbal tick.</p>
+<h4 id="singing-about-her">Singing About Her<a class="headerlink" href="#singing-about-her" title="Permanent link"></a></h4>
+<p>An immediately notable feature is how usage of the word <em>girl</em> skyrockets in the <strong>2000s</strong> before declining to <strong>pre-2000</strong> levels. During the same time there was also a smaller rise and fall in the usage of <em>man</em>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/man-woman-over-time.png" width='1000px'></p>
+
+<p>That <em>man</em> appears much more frequently than <em>woman</em>, and <em>girl</em> appears much more frequently than <em>boy</em> during this period could be the result of increased sexism and even misogyny in popular music. Once again, the timing of these trends coincide with that of hip hop and rap&rsquo;s rise to prominence.</p>
+<h4 id="pronouns">Pronouns<a class="headerlink" href="#pronouns" title="Permanent link"></a></h4>
+<p>A number of plots similar to the one below have been made in previous analyses about the evolution of lyrics in popular music. However, because they often fail to include the pronoun <em>you</em> when studying the usage of <em>I</em> and <em>me</em>, the conclusion is almost always some variant of &ldquo;Our culture is becoming so egotistical.&rdquo;</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/me-you-over-time.png" width='1000px'></p>
+
+<p>While this may still be true, the fact that usage of <em>you</em> increases at about the same pace as that of <em>I</em> suggests that rather than being egotistical, younger listeners simply prefer Hot 100 songs that are more personal and direct.</p>
+<h4 id="related-words">Related Words<a class="headerlink" href="#related-words" title="Permanent link"></a></h4>
+<p>Defining what constitutes a word&rsquo;s meaning has been the subject of longstanding philosophical discussions, but computationally, a popular technique has been to define a word&rsquo;s meaning by its context, i.e. what words tend to appear around it. For example, because the words <strong>senate</strong> and <strong>congress</strong> are more frequently in the vicinity of neighboring words like <strong>government</strong>, <strong>Washington</strong>, and <strong>political</strong> than a word like <strong>fashion</strong>, one could reasonably expect <strong>senate</strong> and <strong>congress</strong> to have more similar contexts than <strong>senate</strong> and <strong>fashion</strong>.</p>
+<p>The <a href="http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/">Word2Vec</a> embedding procedure uses this notion to map words into a latent vector space such that words with similar semantic meanings are closer together in the latent space (e.g. have high cosine similarity) than words with different semantic meanings. I trained the Word2Vec model on the whole corpus of lyrics to generate <strong>50</strong>-dimensional word embeddings, then printed the 10 most similar words to <strong>you</strong>, <strong>love</strong>, <strong>dance</strong>, <strong>oh</strong>, and <strong>money</strong>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/related-words.png" width='1000px'></p>
+
+<p>Note that while <em>you</em> is actually quite different from <strong>i</strong> and <strong>me</strong>, they are often surrounded by the same words, which is why <strong>i</strong> and <strong>me</strong> are considered highly similar to <strong>you</strong>. For the most part, the above table shows that the embeddings make sense, even the most similar words to <strong>money</strong>.</p>
+<p>As with the <a href="#embedding-in-latent-audio-space">projections of songs</a> into a <strong>2</strong>-dimensional space using their audio features, the embedded words can also be projected down into a <strong>2</strong>-dimensional space using TSNE. Below, are the projections of the <strong>200</strong> most frequently used words, projections that mostly appear coherent. <strong>Want</strong>, <strong>wanna</strong>, and <strong>need</strong> form a local cluster, as do <strong>light</strong>, <strong>sun</strong>, and <strong>rain</strong>.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/word-embeddings.png" width='1000px'></p>
+
+<p>Once again, we observe that <strong>money</strong> is closely related to explicit words; perhaps while most artists are busy singing about love, rappers are more pre-occupied with wealth or the lack of it. The outsized attention African American artists pay to money and wealth in their songs could be yet another effect of <a href="https://www.epi.org/blog/the-racial-wealth-gap-how-african-americans-have-been-shortchanged-out-of-the-materials-to-build-wealth/">economic racial discrimination</a>.</p>
+<h4 id="topic-modeling">Topic Modeling<a class="headerlink" href="#topic-modeling" title="Permanent link"></a></h4>
+<p>Topic modeling is a method of discerning what types of topics exist within the corpus of lyrics and how much of each topic is present within each song. <a href="http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/">Latent Dirichlet Allocation</a> (LDA) is a particularly powerful technique that models topics as a distribution over words and songs as a distribution over topics. In modeling the lyrics, I found <strong>6</strong> topics to be ideal; more than that, and the topics either become incoherent or signficantly overlapped each other. The word clouds below show the most probable words to appear in each topic, with my interpretation of the topic in each title.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/lda.png" width='1000px'></p>
+
+<h4 id="sign-of-the-times">Sign of the Times<a class="headerlink" href="#sign-of-the-times" title="Permanent link"></a></h4>
+<p>To see which words are most characteristic of a particular decade, I trained a <a href="http://blog.aylien.com/naive-bayes-for-dummies-a-simple-explanation/">naive Bayes classifier</a> to predict the decade of a song&rsquo;s release from the song&rsquo;s lyrics. The Naive Bayes model attempts to calculate the probability that a song belongs to a decade given its lyrics, and it does so, partially, by calculating the probability of each individual word appearing in the lyrics given each decade. This probability of &ldquo;word given decade,&rdquo; also called the class conditional probability, has been used by previous analyses to determine which words are most characteristic of a decade. However, the class conditional probability by itself is not sufficient; it must be compared against an unconditional probability that the word will appear in the song regardless of decade. That is, we must calculate how many times the probability of a word appearing in a song given that song&rsquo;s decade is greater than the expected probability of the word in general. It is a principal taken from <a href="https://select-statistics.co.uk/blog/market-basket-analysis-understanding-customer-behaviour/">market basket analysis</a> called <strong>lift</strong>; the higher the lift for a word given its decade, the more characteristic that word is of that decade.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/decade-1-grams.png" width='1000px'></p>
+
+<p>I calculated the lift that each decade gives to each unigram, and used these values to generate the word clouds above; greater lifts result in larger words. It appears that popular music was much more wholesome before the turn of the millennium. The same is apparent from the most characteristic bigrams below. Given that hip hop only gained traction in the Billboard charts in the 1990s, it is fitting that &ldquo;hip hop&rdquo; features so prominently where it does.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/decade-2-grams.png" width='1000px'></p>
+
+<p>The most characteristic trigrams and 4-grams below stop making syntactic sense. Rather, the n-grams are mostly melodic embellishments.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/decade-3-grams.png" width='1000px'></p>
+
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/decade-4-grams.png" width='1000px'></p>
+
+<h4 id="extreme-words">Extreme Words<a class="headerlink" href="#extreme-words" title="Permanent link"></a></h4>
+<p>In addition to being characterstic of particular decades, some words are more closely tied to high values for audio features. For example, given lyrics for all the Hot 100 songs and those songs&rsquo; danceability, we can ask, &ldquo;What are the most danceable words?&rdquo;</p>
+<p>One way to answer this question is to use <a href="https://en.wikipedia.org/wiki/Tikhonov_regularization">ridge regression</a>, treating the lyrics as explanatory variables and a target audio feature as response variable. In learning how to predict the audio feature from lyrics, the regression will learn coefficients for each word. The larger the coefficient, the more closely related that word is to the target feature.</p>
+<p align='center'><img src="/Users/derekzhao/Documents/learning/personal-projects/song-lyric-analysis/imgs/most-extreme-words.png" width='1000px'></p>
+
+<p>The word clouds above show the words with the largest coefficients for each target feature. The R2 value is a measure of how effectively the audio feature can be predicted using only the lyrics, with <strong>1.0</strong> indicating perfect predictions and <strong>0.0</strong> indicating no better than random guessing. While most of the audio features cannot be reliably predicted using only the lyrics, it appears that the most significant words for each audio feature makes sense.</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link"></a></h2>
+<p>Combining songs from the Billboard Year-end Hot 100 charts from <strong>1960</strong>-2017, lyrics scraped from the web, and audio feature data gathered from Spotify yielded many angles for understanding mainstream music and how it has evolved. Through a close examination of audio features, we observed a trend of songs becoming shorter, more energetic, louder, and less acoustic, ostensibly all reactions to a shrinking and increasingly competitive market for music. We also saw how the rise of rap and hip hop fundamentally changed the music industry, resulting in a striking increase in artist collaborations and leaving an indelible impression on the textual content of popular music. Including data from multiple sources also enabled the interesting use of supervised and unsupervised machine learning algorithms to extract additional insights, such as determining the most characteristic n-grams of each decade,  finding the most relevant words to each audio feature, and embedding songs, artists, and decades into a common latent space.</p>
+<p>I hope that you enjoyed this extended analysis whether it confirmed your preconceived notions about popular music, offered new insights to ruminate on, or both. Knowing where the music industry has been provides import context for understanding where it is headed. If you have additional ideas about how to further expand or explore the dataset, I encourage you to download it from <a href="https://github.com/zhao1701/spotify-song-lyric-analysis/blob/master/data/billboard-lyrics-spotify.csv">here</a>. Thank you for reading!</p></article></body></html>
