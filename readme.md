@@ -13,7 +13,7 @@
     + [The Big Picture](#the-big-picture)
     + [Embedding in Latent Audio Space](#embedding-in-latent-audio-space)
 - [Analysis of Artists](#analysis-of-artists)
-    + [Artists at the Extremes](#artists-at-the-extremes)
+    + [Extreme Artists](#extreme-artists)
     + [Madonna is the Queen of Pop](#madonna-is-the-queen-of-pop)
     + [Flash in the Pan vs. Steady Burn](#flash-in-the-pan-vs-steady-burn)
     + [Declining Artist Diversity](#declining-artist-diversity)
@@ -69,11 +69,11 @@ The audio features collected from Spotify cover a wide range of metrics, with so
 - **Key** represents the key signature the track is in. Integers map to pitches using [standard pitch class notation](https://en.wikipedia.org/wiki/Pitch_class#Integer_notation) where 0 = C, 1 = C#/Db, 2 = D, etc.
 - **Liveness** detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the song was performed and recorded live. It appears that most Hot 100 singles are studio-recorded.
 - The overall **loudness** of a recording is measured in decibels (dB). Loudness values are averaged across the entire song and typically range between **-60dB** and **0dB**.
-- **Mode** indicates whether a song is in primarily a major key or a minor key. I had expected most popular songs to be in a minor key, so was surprised see that almost 2/3rds of Hot 100 hits are actually in a major key.
-- The **popularity** of a song is a time-discounted relative metric of how often the song has been streamed on Spotify. It can be thought of as a proxy for some combination of the song's Billboard rank and recency.
-- **Speechiness** detects the presence of spoken words in a recording. The more exclusively speech-like the recording (ex. talk shows, audio books, etc.), the closer the speechiness is to 1.0. Naturally, no Hot 100 singles have a speechiness of 1.0, but a significant number non-zero speechiness, most likely rap songs.
-- A song's **tempo** is its speed, or the number of beats per minute. It roughly appears to be normally distributed about 120BPM.
-- The **time signature** is a notational convention to specify how many beats are in each bar of music. Almost all Hot 100 songs have 4 beats per bar, but a small number of hits have 3 beats per bar, also known as triple meter. These are probably slower ballads. A few songs have time signature values of less than 3, which are almost certainly errors.
+- **Mode** indicates whether a song is in primarily a major key or a minor key. I had expected most popular songs to be in a minor key, so was surprised see that almost **2/3** of Hot 100 hits are actually in a major key.
+- The **popularity** of a song is a metric of how often the song has been streamed on Spotify，but with more recent streams weighted more heavily. It can be thought of as a proxy for some combination of the song's Billboard rank and recency.
+- **Speechiness** detects the presence of spoken words in a recording. The more exclusively speech-like the recording (ex. talk shows, audio books, etc.), the closer the speechiness is to **1.0**. Naturally, no Hot 100 singles have a speechiness of **1.0**, but a significant number have non-zero speechiness, most likely rap songs.
+- A song's **tempo** is its speed, or the number of beats per minute (BPM). Tempo roughly appears to be normally distributed around **120BPM**.
+- The **time signature** is a notational convention to specify how many beats are in each bar of music. Almost all Hot 100 songs have **4** beats per bar, but a small number of hits have **3** beats per bar, also known as triple meter. These are probably slower ballads. A few songs have time signature values of **less than 3**, which are almost certainly errors.
 - **Valence** describes the musical positiveness conveyed by the song. In other words, songs with high valence sound more happy/positive/cheerful while songs with low valance sound more negative/depressed/angry. The data shows that Hot 100 singles are more likely to have high valance, which is in keeping with the observation that Hot 100 singles are also more likely to be in a major key.
 
 Source: [Spotify API](https://beta.developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/)
@@ -84,7 +84,7 @@ The boxplots below show the distribution of Hot 100 song durations for each year
 
 <p align='center'><img src="imgs/duration-over-time.png" width='800px'></p>
 
-Between **1960** and **1990**, songs saw a nearly uninterrupted increase in median duration from about **~2.5** minutes to **~4.5** minutes, which I suspect is due to the [invention](https://www.timetoast.com/timelines/music-storage-through-time) of the casette tape in the early **1960s** and compact disc in the early **1980s**. Both were new mediums that could store much more music than vinyl records, allowing songs to become much longer. From **1990** onward, Hot 100 songs have gradually shortened to **~3.6** minutes, possibly driven by competition for radio airplay and [diminishing attention spans](https://news.osu.edu/news/2017/04/04/streaming-attention/). Since **2010**, the availability of streaming platforms offers listeners a much wider choice of music than ever before, incentivizing artists to keep songs shorter and tighter lest they be skipped.
+Between **1960** and **1990**, songs saw a nearly uninterrupted increase in median duration from about **~2.5** minutes to **~4.5** minutes, which could be due to the [invention](https://www.timetoast.com/timelines/music-storage-through-time) of the casette tape in the early **1960s** and compact disc in the early **1980s**. Both were new mediums that could store much more music than vinyl records, allowing songs to become much longer. From **1990** onward, Hot 100 songs have gradually shortened to **~3.6** minutes, possibly driven by competition for radio airplay and [diminishing attention spans](https://news.osu.edu/news/2017/04/04/streaming-attention/). Since **2010**, the availability of streaming platforms offers listeners a much wider choice of music than ever before, incentivizing artists to keep songs shorter and tighter lest they be skipped.
 
 #### Cutting Out the Instrumental Fat
 
@@ -94,7 +94,7 @@ The plots below are also boxplots, but of songs' instrumentalness for each year.
 
 There are two possible factors driving the overall trend:
 
-1. Pure instrumental has become increasingly less popular (ex. classical and New Age music)
+1. Pure instrumental has become increasingly less popular (e.g. classical and New Age music)
 2. The shortening of songs due to declining attention spans means that the instrumental sections of songs, such as intros, interludes, solos, and outros, are [among the first to get cut](https://news.osu.edu/news/2017/04/04/streaming-attention/).
 
 #### The Rise of Rap and Hip-Hop
@@ -114,7 +114,7 @@ The correlation heatmap below shows how the Spotify audio features relate to one
 
 <p align='center'><img src="imgs/correlation-heatmap.png" width='800px'></p>
 
-The following three scatter plots and violin plot show the relationships between the aforementioned features in more detail. Intuitively, it makes sense that loudness and energy are positively correlated; a song's loudness is calculated as an average of loudness values throughout the entire song, and denser, faster music naturally results in a higher average loudness.
+The following three scatter plots and [violin plot](https://en.wikipedia.org/wiki/Violin_plot) show the relationships between the aforementioned features in more detail. Intuitively, it makes sense that loudness and energy are positively correlated; a song's loudness is calculated as an average of loudness values throughout the entire song, and denser, faster music naturally results in a higher average loudness.
 
 The relationship between acousticness and energy would be better approximated with a non-linear model, yet the basic relationship still holds; the greater the proportion of acoustic instruments in a song, the lower the energy of the song.
 
@@ -142,7 +142,7 @@ The popularity of synthesizers in the late **1970s** and **1980s** likely furthe
 
 #### Sad Dancing
 
-Another fascinating trend in the data is that the danceability of Hot 100 songs has been on the rise while the valence (positivity) has been declining.
+Another fascinating trend in the data is that the danceability of Hot 100 songs has been rising while the valence (positivity) has been declining.
 
 <p align='center'><img src="imgs/danceability-vs-valence-over-time.png" width='800px'></p>
 
@@ -161,15 +161,15 @@ This phenomenon is called [The Loudness Wars](https://www.npr.org/2009/12/31/122
 
 #### The Big Picture
 
-The [parallel coordinate plot](https://en.wikipedia.org/wiki/Parallel_coordinates) below visualizes the relationships between all the key features. Each path extending from valence to acousticness represents a single song and is comprised of line segments that connect the values of each feature of the song. These values were rescaled to between **0.0** and **1.0** for ease of visualization.
+The [parallel coordinate plot](https://en.wikipedia.org/wiki/Parallel_coordinates) below visualizes the relationships between all the key audio features. Each path extending from valence to acousticness represents a single song and is comprised of line segments that connect the values of each feature of the song. These values were rescaled to between **0.0** and **1.0** for ease of visualization.
 
 <p align='center'><img src="imgs/parallel-coordinates.png" width='800px'></p>
 
-Here too, we can see that valence and danceability are positively correlated; higher valence values generally connect to higher danceability values relative to other songs of similar age. However, more recent Hot 100 songs tend to be much lower in valence and higher in danceability than older ones. Generally speaking, the newest songs tend to be higher energy, more danceable, less positive, louder, and barely acoustic.
+Here too, we can see that valence and danceability are positively correlated; higher valence values generally connect to higher danceability values relative to other songs of similar age. However, more recent Hot 100 songs tend to be much lower in valence and higher in danceability than older ones. Generally speaking, the newest songs tend to be higher energy, more danceable, less positive, louder, and less acoustic.
 
 #### Embedding in Latent Audio Space
 
-An embedding is a projection of high-dimensional data points, in this case 15 dimensions of audio feature data, into a lower-dimensional space. [T-distributed Stochastic Neighbor Embedding](https://distill.pub/2016/misread-tsne/), or tSNE, is a particularly effective method for non-linearly compressing data into a 2 or 3-dimensional space suitable for visualization; similar points are pulled together while dissimilar points are pushed away. In addition to songs, I averaged the audio features for each artist, decade, and a few other properties and included them in the embedding as well.
+An embedding is a projection of high-dimensional data points, in this case 15 dimensions of audio feature data, into a lower-dimensional space. [T-distributed Stochastic Neighbor Embedding](https://distill.pub/2016/misread-tsne/), or TSNE, is a particularly effective method for non-linearly compressing data into a 2 or 3-dimensional space suitable for visualization; similar points are pulled together while dissimilar points are pushed away. In addition to songs, I averaged the audio features for each artist, decade, and a few other properties and included them in the embedding as well.
 
 <p align='center'><img src="imgs/embedding-audio-features.png" width='800px'></p>
 
@@ -178,29 +178,29 @@ Usually the axes of a tSNE embedding hold no significant meaning, but because of
 It is important to emphasize that these embeddings are based only on audio features; songs of different genres that stylistically sound nothing alike might still be projected next to each other because they contain similar features like acousticness, loudness, tempo, etc. For this reason, embedding only audio feature data may be of limited usefulness (Is embedding **My Sharona** next to **Hey Jude** really justified? Why is **Every Breath You Take** and **Bette Davis Eyes** so far along the recency axis?)
 
 ## Analysis of Artists
-#### Artists at the Extremes
+#### Extreme Artists
 Using the Spotify audio feature data, I constructed audio feature profiles for each artist by averaging the features for each of their songs. The word clouds below show which artists have the highest values for each audio feature. Only artists with at least **5** Hot 100 songs are included since too small a sample may not be representative of the artist's overall work.
 
 <p align='center'><img src="imgs/most-extreme-artists.png" width='800px'></p>
 
 #### Madonna is the Queen of Pop
-Perhaps the most natural first question to ask is simply, "Which artists have the most hit singles?" Amazingly, Madonna has charted **35** times and remains the only artist to have produced over **30** hot 100 singles throughout the course of her career.
+Perhaps the most natural first question to ask is simply, "Which artists have the most hit singles?" Amazingly, **Madonna** has charted **35** times and remains the only artist to have produced over **30** hot 100 singles since the **1960s**.
 
 <p align='center'><img src="imgs/most-charted-artists.png" width='800px'></p>
 
 #### Flash in the Pan vs. Steady Burn
-While legendary artists from Madonna to Phil Collins have forged successful careers with numerous hit songs, the vast majority of artists are not as fortunate. The histogram on the left shows that over **1,300** artists only ever generated **1** hit song. In fact, **58%** of charting artists are one-hit wonders who were only able do so once in their careers, while **82%** of charting artists have charted at most 3 times.
+While legendary artists from **Madonna** to **Phil Collins** have forged successful careers with numerous hit songs, the vast majority of artists are not as fortunate. The histogram on the left shows that over **1,300** artists only ever generated **1** hit song. In fact, **58%** of charting artists are one-hit wonders and only able chart once in their careers, while **82%** of charting artists have charted **at most 3** times.
 <p align='center'><img src="imgs/distribution-hits-per-artist.png" width='800px'></p>
 
-That half of all charting artists are flashes in the pan suggests that the Year-End Hot 100 is surprisingly diverse in terms of the number of unique artists that chart each year. It speaks to how competitive the music industry is that generating a hit single that lands on the Year-End Hot 100, and all the exposure such success entails, is far from a guarantee of maintaining a sustained career. Of those artists with steady-burn careers, I plotted their hit songs as points on separate timelines, one timeline for each artist. The timelines are displayed in order of length of the artist's career, starting with Michael Jackson, who has had the longest charting career; even years after his death, a song he wrote managed chart in the Hot 100 in **2014**.
+That half of all charting artists are flashes in the pan suggests that the Year-End Hot 100 is surprisingly diverse in terms of the number of unique artists that chart each year. It speaks to how competitive the music industry is; generating a hit single that lands on the Year-End Hot 100, and all the exposure such success entails, is far from a guarantee of maintaining a sustained career. Of those artists with steady-burn careers, I plotted their hit songs as points on separate timelines, one timeline for each artist. The timelines are displayed in order of length of the artist's career, calculated as the time elapsed from their earliest Hot 100 single to their latest.
 
 <p align='center'><img src="imgs/artist-career-spans.png" width='800px'></p>
-<p align='center'> <b>Note</b>: "Length of Career Span" is an imperfect metric since older artists may have had hits prior to 1960.</p>
+<p align='center'> <b>Note</b>: "Length of career span" is an imperfect metric since older artists may have had hits prior to 1960.</p>
 
-I was quite surprised to see how some artists such as Santana and Aaron Neville did not produce as many hit singles as the most popular artists, yet still managed to chart on the Year-End Top 100 during vastly different decades of their careers.
+Surprisingly, some artists such as **Santana** and **Aaron Neville** did not produce as many hit singles as the most popular artists, yet still managed to chart on the Year-End Top 100 during vastly different decades of their careers.
 
 #### Declining Artist Diversity
-The number of unique artists on the Year-End Hot 100 is in general decline. The trend is quite noisy, so I have smoothed it with a ten-year moving average. As recently as **2016**, close to half of all songs on the Year-End Hot 100 were from artists who charted at least twice that year, a far cry from **1972** when almost all of the top 100 songs were from distinct artists.
+The number of unique artists on the Year-End Hot 100 is in general decline. The trend is quite noisy, so I smoothed it with a ten-year moving average. As recently as **2016**, close to half of all songs on the Year-End Hot 100 were from artists who charted at least twice that year, a far cry from **1972** when almost all of the top 100 songs were from distinct artists.
 <p align='center'><img src="imgs/artist-diversity-over-time.png" width='800px'></p>
 Particularly interesting is the sharp decline in artist diversity from **2000** to **2010**, a [traumatic decade of shrinking revenue for the entire industry](http://money.cnn.com/2010/02/02/news/companies/napster_music_industry/). It is possible that during this period, risk-averse record companies were only willing to produce, market, and distribute songs from established musicians and the occasional newly discovered superstar. In essence, as the pie shrunk, the superstars got larger pieces of it until the rise of digital streaming revenue in the early **2010s** partially stemmed the bleeding.
 
@@ -229,7 +229,7 @@ Focusing on the largest component of the network, I removed the numerous small a
 ## Analysis of Lyrics
 
 #### Love Conquers All
-After removing common but uninformative words (also called [stop words](https://en.wikipedia.org/wiki/Stop_words)) from the whole corpus of lyrics, **love** becomes the most frequently used word, followed by **know** and then **like**.
+After removing common but uninformative words (also called [stop words](https://en.wikipedia.org/wiki/Stop_words)) from the whole [corpus](https://en.wikipedia.org/wiki/Text_corpus) of lyrics, **love** becomes the most frequently used word, followed by **know** and then **like**.
 <p align='center'><img src="imgs/most-popular-words.png" width='1000px'></p>
 
 Bigrams are just combinations of two words. For example, the words/unigrams **ice** and **cream** together form a very common bigram, **ice cream**. In the case of Hot 100 song lyrics, the most common bigrams are, unsurprisingly, repetitions of words or sounds, often as a means of embellishing melodies.
@@ -237,7 +237,7 @@ Bigrams are just combinations of two words. For example, the words/unigrams **ic
 <p align='center'><img src="imgs/most-popular-bigrams.png" width='1000px'></p>
 
 #### Love is Not Forever
-The time series plot below shows the number of times _love_ and _like_ appear in Hot 100 songs for each year. Common wisdom holds that most Hot 100 songs are one way or another about love, and songs from the **late 1970s** and **1980s** certainly use the word quite a bit.
+The time series plot below shows the number of times **love** and **like** appear in Hot 100 songs for each year. Common wisdom holds that most Hot 100 songs are one way or another about love, and songs from the **late 1970s** and **1980s** certainly use the word quite a bit.
 
 <p align='center'><img src="imgs/love-like-over-time.png" width='1000px'></p>
 
@@ -245,46 +245,46 @@ Since the **1960s**, the frequency with which _like_ has been used in Hot 100 so
 
 #### Singing About Her
 
-An immediately notable feature is how usage of the word _girl_ skyrockets in the **2000s** before declining to **pre-2000** levels. During the same time there was also a smaller rise and fall in the usage of _man_.
+An immediately notable feature is how usage of the word **girl** skyrockets in the **2000s** before declining to **pre-2000** levels. During the same time there was also a smaller rise and fall in the usage of **man**.
 
 <p align='center'><img src="imgs/man-woman-over-time.png" width='1000px'></p>
 
-That _man_ appears much more frequently than _woman_, and _girl_ appears much more frequently than _boy_ during this period could be the result of increased sexism and even misogyny in popular music. Once again, the timing of these trends coincide with that of hip hop and rap's rise to prominence.
+That **man** appears much more frequently than **woman**, and **girl** appears much more frequently than **boy** during this period could be the result of increased sexism and even misogyny in popular music. Once again, the timing of these trends coincide with that of hip hop and rap's rise to prominence.
 
 #### Pronouns
-A number of plots similar to the one below have been made in previous analyses about the evolution of lyrics in popular music. However, because they often fail to include the pronoun _you_ when studying the usage of _I_ and _me_, the conclusion is almost always some variant of "Our culture is becoming so egotistical."
+A number of plots similar to the one below have been made in previous analyses about the evolution of lyrics in popular music. However, because they often fail to include the pronoun **you** when studying the usage of **I** and **me**, the conclusion is almost always some variant of, "Our culture is becoming so egotistical."
 
 <p align='center'><img src="imgs/me-you-over-time.png" width='1000px'></p>
 
-While this may still be true, the fact that usage of _you_ increases at about the same pace as that of _I_ suggests that rather than being egotistical, younger listeners simply prefer Hot 100 songs that are more personal and direct.
+While this may still be true, the fact that usage of **you** increases at about the same pace as that of **I** suggests that rather than being egotistical, younger listeners simply prefer songs that are more personal and direct.
 
 #### Related Words
-Defining what constitutes a word's meaning has been the subject of longstanding philosophical discussions, but computationally, a popular technique has been to define a word's meaning by its context, i.e. what words tend to appear around it. For example, because the words **senate** and **congress** are more frequently in the vicinity of neighboring words like **government**, **Washington**, and **political** than a word like **fashion**, one could reasonably expect **senate** and **congress** to have more similar contexts than **senate** and **fashion**.
+Defining what constitutes a word's meaning has been the subject of longstanding philosophical discussions, but computationally, a popular technique has been to define a word's meaning by its context, i.e. what words tend to appear around it. For example, because the words **Senate** and **Congress** are more frequently in the vicinity of neighboring words like **government**, **Washington**, and **political** than a word like **fashion**, one could reasonably expect **Senate** and **Congress** to have more similar contexts than **Senate** and **fashion**.
 
-The [Word2Vec](http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/) embedding procedure uses this notion to map words into a latent vector space such that words with similar semantic meanings are closer together in the latent space (e.g. have high cosine similarity) than words with different semantic meanings. I trained the Word2Vec model on the whole corpus of lyrics to generate **50**-dimensional word embeddings, then printed the 10 most similar words to **you**, **love**, **dance**, **oh**, and **money**.
+The [Word2Vec](http://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/) embedding procedure uses this notion to map words into a latent vector space such that words with similar semantic meanings are closer together in the latent space (i.e. have high cosine similarity) than words with different semantic meanings. I trained a Word2Vec model on the whole corpus of lyrics to generate **50**-dimensional word embeddings, then printed the **10** most similar words to **you**, **love**, **dance**, **oh**, and **money**.
 
 <p align='center'><img src="imgs/related-words.png" width='1000px'></p>
 
-Note that while *you* is actually quite different from **i** and **me**, they are often surrounded by the same words, which is why **i** and **me** are considered highly similar to **you**. For the most part, the above table shows that the embeddings make sense, even the most similar words to **money**.
+Note that while **you** is actually quite different from **i** and **me**, they are often surrounded by the same words, which is why **i** and **me** are considered highly similar to **you**. For the most part, the above table shows that the embeddings make sense, even the most similar words to **money**.
 
-As with the [projections of songs](#embedding-in-latent-audio-space) into a **2**-dimensional space using their audio features, the embedded words can also be projected down into a **2**-dimensional space using TSNE. Below, are the projections of the **200** most frequently used words, projections that mostly appear coherent. **Want**, **wanna**, and **need** form a local cluster, as do **light**, **sun**, and **rain**.
+As with the [projections of songs](#embedding-in-latent-audio-space) onto a **2**-dimensional space using their audio features, the embedded words can also be projected down onto a **2**-dimensional space using TSNE. Below are the projections of the **200** most frequently used words. The projections appear reasonably coherent; **want**, **wanna**, and **need** form a local cluster, as do **light**, **sun**, and **rain**.
 
 <p align='center'><img src="imgs/word-embeddings.png" width='1000px'></p>
 
 Once again, we observe that **money** is closely related to explicit words; perhaps while most artists are busy singing about love, rappers are more pre-occupied with wealth or the lack of it. The outsized attention African American artists pay to money and wealth in their songs could be yet another effect of [economic racial discrimination](https://www.epi.org/blog/the-racial-wealth-gap-how-african-americans-have-been-shortchanged-out-of-the-materials-to-build-wealth/).
 
 #### Topic Modeling
-Topic modeling is a method of discerning what types of topics exist within the corpus of lyrics and how much of each topic is present within each song. [Latent Dirichlet Allocation](http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/) (LDA) is a particularly powerful technique that models topics as a distribution over words and songs as a distribution over topics. In modeling the lyrics, I found **6** topics to be ideal; more than that, and the topics either become incoherent or signficantly overlapped each other. The word clouds below show the most probable words to appear in each topic, with my interpretation of the topic in each title.
+Topic modeling is a method of discerning what types of topics exist within the corpus of lyrics and how much of each topic is present within each song. [Latent Dirichlet Allocation](http://blog.echen.me/2011/08/22/introduction-to-latent-dirichlet-allocation/) (LDA) is a particularly powerful technique that models topics as a distribution over words and songs as a distribution over topics. In modeling the lyrics, I found **6** topics to be ideal; more than that, and the topics either become incoherent or signficantly overlapped with each other. The word clouds below show the most probable words to appear in each topic, with my interpretation of the topic in each title.
 
 <p align='center'><img src="imgs/lda.png" width='1000px'></p>
 
 #### Sign of the Times
 
-To see which words are most characteristic of a particular decade, I trained a [naive Bayes classifier](http://blog.aylien.com/naive-bayes-for-dummies-a-simple-explanation/) to predict the decade of a song's release from the song's lyrics. The Naive Bayes model attempts to calculate the probability that a song belongs to a decade given its lyrics, and it does so, partially, by calculating the probability of each individual word appearing in the lyrics given each decade. This probability of "word given decade," also called the class conditional probability, has been used by previous analyses to determine which words are most characteristic of a decade. However, the class conditional probability by itself is not sufficient; it must be compared against an unconditional probability that the word will appear in the song regardless of decade. That is, we must calculate how many times the probability of a word appearing in a song given that song's decade is greater than the expected probability of the word in general. It is a principal taken from [market basket analysis](https://select-statistics.co.uk/blog/market-basket-analysis-understanding-customer-behaviour/) called **lift**; the higher the lift for a word given its decade, the more characteristic that word is of that decade.
+To see which words are most characteristic of a particular decade, I trained a [naive Bayes classifier](http://blog.aylien.com/naive-bayes-for-dummies-a-simple-explanation/) to predict the decade of a song's release from the song's lyrics. The Naive Bayes model attempts to calculate the probability that a song belongs to a decade given its lyrics, and it does so, partially, by calculating the probability of each individual word appearing in the lyrics given each decade. This **probability of word given decade**, also called the **class conditional probability**, has been used by other analyses to determine which words are most characteristic of a decade. However, the class conditional probability by itself is not sufficient; it must be compared against an unconditional probability that the word will appear in the song regardless of decade. That is, we must calculate how many times the probability of a word appearing in a song given that song's decade is greater than the expected probability of the word in general. It is a principal taken from [market basket analysis](https://select-statistics.co.uk/blog/market-basket-analysis-understanding-customer-behaviour/) called **lift**; the higher the lift for a word given its decade, the more characteristic that word is of that decade.
 
 <p align='center'><img src="imgs/decade-1-grams.png" width='1000px'></p>
 
-I calculated the lift that each decade gives to each unigram, and used these values to generate the word clouds above; greater lifts result in larger words. It appears that popular music was much more wholesome before the turn of the millennium. The same is apparent from the most characteristic bigrams below. Given that hip hop only gained traction in the Billboard charts in the 1990s, it is fitting that "hip hop" features so prominently where it does.
+I calculated the lift that each decade gives to each unigram, and used these values to generate the word clouds above; greater lifts result in larger words. It appears that popular music was much more wholesome before the turn of the millennium. The same is apparent from the most characteristic bigrams below. Given that hip hop only gained traction in the Billboard charts in the 1990s, it is fitting that the bigram **hip hop** features so prominently where it does.
 
 <p align='center'><img src="imgs/decade-2-grams.png" width='1000px'></p>
 
@@ -296,16 +296,16 @@ The most characteristic trigrams and 4-grams below stop making syntactic sense. 
 
 #### Extreme Words
 
-In addition to being characterstic of particular decades, some words are more closely tied to high values for audio features. For example, given lyrics for all the Hot 100 songs and those songs' danceability, we can ask, "What are the most danceable words?"
+In addition to being characterstic of particular decades, some words are more closely tied to high values of certain audio features. For example, given lyrics for all the Hot 100 songs and those songs' danceability, we can ask, "What are the most danceable words?"
 
-One way to answer this question is to use [ridge regression](https://en.wikipedia.org/wiki/Tikhonov_regularization), treating the lyrics as explanatory variables and a target audio feature as response variable. In learning how to predict the audio feature from lyrics, the regression will learn coefficients for each word. The larger the coefficient, the more closely related that word is to the target feature.
+One way to answer this question is to use [ridge regression](https://en.wikipedia.org/wiki/Tikhonov_regularization), treating the lyrics as explanatory variables and a target audio feature as the response variable. In learning how to predict the audio feature from lyrics, the regression will learn coefficients for each word. The larger the coefficient, the more closely related that word is to the target feature.
 
 <p align='center'><img src="imgs/most-extreme-words.png" width='1000px'></p>
 
-The word clouds above show the words with the largest coefficients for each target feature. The R2 value is a measure of how effectively the audio feature can be predicted using only the lyrics, with **1.0** indicating perfect predictions and **0.0** indicating no better than random guessing. While most of the audio features cannot be reliably predicted using only the lyrics, it appears that the most significant words for each audio feature makes sense.
+The word clouds above show the words with the largest coefficients for each target feature. The R<sup>2</sup> value is a measure of how effectively the audio feature can be predicted using only the lyrics, with **1.0** indicating perfect predictions and **0.0** indicating no better than random guessing. While most of the audio features cannot be reliably predicted using only the lyrics, it appears that the most significant words for each audio feature is somewhat reasonable.
 
 ## Conclusion
 
-Combining songs from the Billboard Year-end Hot 100 charts from **1960**-2017, lyrics scraped from the web, and audio feature data gathered from Spotify yielded many angles for understanding mainstream music and how it has evolved. Through a close examination of audio features, we observed a trend of songs becoming shorter, more energetic, louder, and less acoustic, ostensibly all reactions to a shrinking and increasingly competitive market for music. We also saw how the rise of rap and hip hop fundamentally changed the music industry, resulting in a striking increase in artist collaborations and leaving an indelible impression on the textual content of popular music. Including data from multiple sources also enabled the interesting use of supervised and unsupervised machine learning algorithms to extract additional insights, such as determining the most characteristic n-grams of each decade,  finding the most relevant words to each audio feature, and embedding songs, artists, and decades into a common latent space.
+Combining songs from the Billboard Year-End Hot 100 charts from **1960**-**2017**, lyrics scraped from the web, and audio feature data gathered from Spotify yielded many angles for understanding mainstream music and how it has evolved. Through a close examination of audio features, we observed a trend of songs becoming shorter, more energetic, louder, and less acoustic, ostensibly all reactions to a shrinking and increasingly competitive market for music. We also saw how the rise of rap and hip hop fundamentally changed the music industry, resulting in a striking increase in artist collaborations and leaving an indelible impression on the textual content of popular music. Including data from multiple sources also enabled the interesting use of supervised and unsupervised machine learning algorithms to extract additional insights, such as determining the most characteristic n-grams of each decade,  finding the most relevant words to each audio feature, and embedding songs, artists, and decades into a common latent space.
 
-I hope that you enjoyed this extended analysis whether it confirmed your preconceived notions about popular music, offered new insights to ruminate on, or both. Knowing where the music industry has been provides import context for understanding where it is headed. If you have additional ideas about how to further expand or explore the dataset, I encourage you to download it from [here](https://github.com/zhao1701/spotify-song-lyric-analysis/blob/master/data/billboard-lyrics-spotify.csv). Thank you for reading!
+I hope that you enjoyed this extended analysis whether it confirmed your preconceived notions about popular music, offered new insights to ruminate on, or both. Knowing where the music industry has been provides important context for understanding where it is headed. If you have additional ideas about how to further expand or explore the dataset, I encourage you to download it from [here](https://github.com/zhao1701/spotify-song-lyric-analysis/blob/master/data/billboard-lyrics-spotify.csv). Thank you for reading!
