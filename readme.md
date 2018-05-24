@@ -56,15 +56,15 @@ The final de-duplicated dataset consists of **5566** singles, of which **5396** 
 
 ## Analysis of Audio Features
 
-The audio features collected from Spotify cover a wide range of areas, with some related to the content of the lyrics, some measuring objective properties of the song, and most interestingly, some measuring subjective properties like how danceable or positive a song is. Below are distributions of each feature and a brief explanation of their meaning.
+The audio features collected from Spotify cover a wide range of metrics, with some related to the content of the lyrics, some measuring objective properties of the song, and most interestingly, some measuring subjective properties like how danceable or positive-feeling a song is. Below are distributions of each feature and a brief explanation of their meaning.
 
 <p align='center'><img src="imgs/univariate-distributions.png" width='800px'></p>
 
-- **Acousticness** describes whether the song uses primarily acoustic instruments or electronic/electric instruments. A value of 1 indicates that a song is purely acoustic, and from the histogram it appears a large majority of popular music is more electronic than it is acoustic.
-- **Danceability** describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythmic stability, beat strength, and overall regularity. It appears to have a normal distribution, with a value of 1 indicating high danceability.
-- **Duration (minutes)** simply indicates the length of the song. Most songs are between 3-5 minutes long, however the Year-End Hot 100 charts contain at least one song of over 20 minutes in length.
+- **Acousticness** describes whether the song uses primarily acoustic instruments or electronic/electric instruments. A value of **1.0** indicates that a song is purely acoustic, and from the histogram it appears a large majority of popular music uses electric and electronic instruments rather than acoustic instruments.
+- **Danceability** describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythmic stability, beat strength, and overall regularity, with a value of **1.0** indicating high danceability. The danceability of Hot 100 songs appears to be normally distributed.
+- **Duration (minutes)** simply indicates the length of the song. Most songs are between **3**-**5** minutes long, however the Year-End Hot 100 charts contain at least one song of over **20** minutes in length.
 - **Energy** is different from danceability in that it is a perceptual measure of intensity and activity. Energetic tracks feel dense, fast, loud, and noisy. For example, death metal would have a high energy value while a Bach prelude would have a low one. Songs on the Year-End Hot 100 are unsurprisingly skewed towards having higher energy.
-- **Explicit** is a categorical feature, with 1 indicating that a song contains explicit lyrics. The vast majority of Hot 100 songs are not explicit.
+- **Explicit** is a categorical feature, with **1** indicating that a song contains explicit lyrics. The vast majority of Hot 100 songs are not explicit.
 - **Instrumentalness** describes the extent to which the singer is not the primary performer of the song. Clearly, almost all songs on the Hot 100 are dominated by vocal performances.
 - **Key** represents the key signature the track is in. Integers map to pitches using standard pitch class notation where 0 = C, 1 = C#/Db, 2 = D, etc.
 - **Liveness** detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the song was performed and recorded live. It appears that most Hot 100 singles are studio-recorded.
