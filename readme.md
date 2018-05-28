@@ -203,7 +203,9 @@ Surprisingly, some artists such as **Santana** and **Aaron Neville** did not pro
 
 #### Declining Artist Diversity
 The number of unique artists on the Year-End Hot 100 is in general decline. The trend is quite noisy, so I smoothed it with a ten-year moving average. As recently as **2016**, close to half of all songs on the Year-End Hot 100 were from artists who charted at least twice that year, a far cry from **1972** when almost all of the top 100 songs were from distinct artists.
+
 <p align='center'><img src="imgs/artist-diversity-over-time.png" width='800px'></p>
+
 Particularly interesting is the sharp decline in artist diversity from **2000** to **2010**, a [traumatic decade of shrinking revenue for the entire industry](http://money.cnn.com/2010/02/02/news/companies/napster_music_industry/). It is possible that during this period, risk-averse record companies were only willing to produce, market, and distribute songs from established musicians and the occasional newly discovered superstar. In essence, as the pie shrunk, the superstars got larger pieces of it until the rise of digital streaming revenue in the early **2010s** partially stemmed the bleeding.
 
 #### An Increasingly Connected World
