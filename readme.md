@@ -154,7 +154,9 @@ From the **1960s** to the **1980s**, the densest regions of the distribution of 
 
 #### The Loudness Wars
 One of the most unmistakable trends is that, in addition to becoming more energetic, Hot 100 music has also become louder and louder.
+
 <p align='center'><img src="imgs/energy-vs-loudness-over-time.png" width='800px'></p>
+
 This phenomenon is called [The Loudness Wars](https://www.npr.org/2009/12/31/122114058/the-loudness-wars-why-music-sounds-worse). Listeners have a habit of preferring louder music over softer music, and as the music marketplace becomes increasingly crowded, the average volume of songs is pushed higher to stand out more, resulting in an inevitable "loudness arms race".
 
 <p align='center'><img src="imgs/loudness-over-time.png" width='800px'></p>
